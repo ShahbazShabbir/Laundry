@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:one/splash.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -140,7 +139,6 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -190,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_basket),
-            label: 'Request Laundry',
+            label: 'Laundry',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.warning),
@@ -216,10 +214,174 @@ class _MyHomePageState extends State<MyHomePage> {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Home Page',
-        style: TextStyle(fontSize: 24.0),
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Card(
+              elevation: 8.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: ListTile(
+                title: Text(
+                  'Total Uniform',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  '16',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.cyan,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: Card(
+                    elevation: 8.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        'Assigned Uniform',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '8',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child: Card(
+                    elevation: 8.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        'In Laundry',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '3',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.pink,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Request()),
+          );
+        },
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(16.0),
+
+      ),
+    );
+  }
+}
+
+class Request extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Request Laundry'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Name',
+                hintText: 'Enter your name',
+                prefixIcon: Icon(Icons.person),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Email',
+                hintText: 'Enter your email',
+                prefixIcon: Icon(Icons.email),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Uniform',
+                hintText: 'Enter Number of Uniform for Laundry',
+                prefixIcon: Icon(Icons.person_outlined),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              obscureText: true,
+            ),
+            SizedBox(height: 24.0),
+            ElevatedButton(
+              onPressed: () {
+                // Perform button action
+                print('Button pressed');
+              },
+              child: Text('Submit'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.orange,
+                onPrimary: Colors.white,
+                textStyle: TextStyle(fontSize: 18.0),
+                padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+                elevation: 2.0,
+                shadowColor: Colors.black,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -315,7 +477,6 @@ class OrderCard extends StatelessWidget {
   }
 }
 
-
 class RequestLaundry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -353,8 +514,6 @@ class RequestLaundry extends StatelessWidget {
     );
   }
 }
-
-
 
 // class RequestLaundry extends StatelessWidget {
 //   final List<Person> people = [
@@ -396,6 +555,7 @@ class RequestLaundry extends StatelessWidget {
 //
 //   Person(this.name, this.imagePath);
 // }
+
 class ComplaintCard extends StatelessWidget {
   final String complaintNumber;
   final String dateTime;
@@ -517,8 +677,6 @@ class Complaint extends StatelessWidget {
   }
 }
 
-
-
 class SubmitComplaint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -589,20 +747,6 @@ class SubmitComplaint extends StatelessWidget {
     );
   }
 }
-
-
-// class ChatPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Text(
-//         'Chat Page',
-//         style: TextStyle(fontSize: 24.0),
-//       ),
-//     );
-//   }
-// }
-
 
 class ChatPage extends StatelessWidget {
   @override
