@@ -13,30 +13,36 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Laundry',
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home:SplashApp(),
+      home:const SplashApp(),
     );
   }
 }
 
 class SplashApp extends StatelessWidget {
+  const SplashApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Splash Screen',
       theme: ThemeData(
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -45,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
@@ -58,31 +64,27 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.orange,
       body: Center(
-        child: Text(
-          'Logo',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: Image.asset('images/logo.png'),
+
       ),
     );
   }
 }
 
 class LoginPage extends StatelessWidget {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -91,46 +93,45 @@ class LoginPage extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Email',
                 hintText: 'Enter your Email',
-                prefixIcon: Icon(Icons.email),
+                prefixIcon: const Icon(Icons.email),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
               obscureText: true,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Password',
                 hintText: 'Enter your Password',
-                prefixIcon: Icon(Icons.lock),
+                prefixIcon: const Icon(Icons.lock),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
               obscureText: true,
             ),
-            SizedBox(height: 24.0),
+            const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );
               },
-              child: Text('Login'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.orange,
-                onPrimary: Colors.white,
-                textStyle: TextStyle(fontSize: 18.0),
-                padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                foregroundColor: Colors.white, backgroundColor: Colors.orange,
+                textStyle: const TextStyle(fontSize: 18.0),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32.0),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 elevation: 2.0,
                 shadowColor: Colors.black,
 
               ),
+              child: const Text('Login'),
             ),
           ],
         ),
@@ -140,19 +141,24 @@ class LoginPage extends StatelessWidget {
 }
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Laundry App',
+      debugShowCheckedModeBanner: false,
+      title: 'Jetex',
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -161,17 +167,17 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   final List<Widget> _widgetOptions = [
-    HomePage(),
-    RequestLaundry(),
-    Complaint(),
-    ChatPage(),
+    const HomePage(),
+    const RequestLaundry(),
+    const Complaint(),
+    const ChatPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Laundry App'),
+        title: const Text('Jetex'),
       ),
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -181,18 +187,22 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.orange,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.white,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_basket),
+            icon: Icon(Icons.local_laundry_service),
             label: 'Laundry',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.warning),
+            icon: Icon(Icons.support_agent),
             label: 'Complaint',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dangerous),
+            label: 'Damage',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
@@ -212,11 +222,13 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Card(
@@ -224,7 +236,7 @@ class HomePage extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
-              child: ListTile(
+              child: const ListTile(
                 title: Text(
                   'Total Uniform',
                   style: TextStyle(
@@ -241,7 +253,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Row(
               children: [
                 Expanded(
@@ -250,7 +262,7 @@ class HomePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: ListTile(
+                    child: const ListTile(
                       title: Text(
                         'Assigned Uniform',
                         style: TextStyle(
@@ -268,14 +280,14 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 16.0),
+                const SizedBox(width: 16.0),
                 Expanded(
                   child: Card(
                     elevation: 8.0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
-                    child: ListTile(
+                    child: const ListTile(
                       title: Text(
                         'In Laundry',
                         style: TextStyle(
@@ -302,13 +314,13 @@ class HomePage extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Request()),
+            MaterialPageRoute(builder: (context) => const Request()),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: const Padding(
         padding: EdgeInsets.all(16.0),
 
       ),
@@ -317,14 +329,16 @@ class HomePage extends StatelessWidget {
 }
 
 class Request extends StatelessWidget {
+  const Request({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Request Laundry'),
+        title: const Text('Request Laundry'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -332,53 +346,52 @@ class Request extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Name',
                 hintText: 'Enter your name',
-                prefixIcon: Icon(Icons.person),
+                prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Email',
                 hintText: 'Enter your email',
-                prefixIcon: Icon(Icons.email),
+                prefixIcon: const Icon(Icons.email),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Uniform',
                 hintText: 'Enter Number of Uniform for Laundry',
-                prefixIcon: Icon(Icons.person_outlined),
+                prefixIcon: const Icon(Icons.person_outlined),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
               obscureText: true,
             ),
-            SizedBox(height: 24.0),
+            const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () {
                 // Perform button action
                 print('Button pressed');
               },
-              child: Text('Submit'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.orange,
-                onPrimary: Colors.white,
-                textStyle: TextStyle(fontSize: 18.0),
-                padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                foregroundColor: Colors.white, backgroundColor: Colors.orange,
+                textStyle: const TextStyle(fontSize: 18.0),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32.0),
                 ),
                 elevation: 2.0,
                 shadowColor: Colors.black,
               ),
+              child: const Text('Submit'),
             ),
           ],
         ),
@@ -393,7 +406,7 @@ class OrderCard extends StatelessWidget {
   final int numberOfItems;
   final String orderStatus;
 
-  const OrderCard({
+  const OrderCard({super.key,
     required this.orderNumber,
     required this.dateTime,
     required this.numberOfItems,
@@ -420,15 +433,16 @@ class OrderCard extends StatelessWidget {
     }
 
     return Card(
-      elevation: 2.0,
+      elevation: 6.0,
+      margin: const EdgeInsets.fromLTRB(8, 0, 8, 20),
       child: Padding(
-        padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.all(8.0),
 
     child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
     ListTile(
-    title: Text(
+    title: const Text(
     'Order Number:',
     style: TextStyle(
     fontWeight: FontWeight.bold,
@@ -436,8 +450,9 @@ class OrderCard extends StatelessWidget {
     ),
     subtitle: Text(orderNumber),
     ),
+
     ListTile(
-    title: Text(
+    title: const Text(
     'Date and Time:',
     style: TextStyle(
     fontWeight: FontWeight.bold,
@@ -445,17 +460,9 @@ class OrderCard extends StatelessWidget {
     ),
     subtitle: Text(dateTime),
     ),
+
     ListTile(
-    title: Text(
-    'Number of Items:',
-    style: TextStyle(
-    fontWeight: FontWeight.bold,
-    ),
-    ),
-    subtitle: Text(numberOfItems.toString()),
-    ),
-    ListTile(
-    title: Text(
+    title: const Text(
     'Order Status:',
     style: TextStyle(
     fontWeight: FontWeight.bold,
@@ -478,14 +485,17 @@ class OrderCard extends StatelessWidget {
 }
 
 class RequestLaundry extends StatelessWidget {
+  const RequestLaundry({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Order Card Example',
+      debugShowCheckedModeBanner: false,
+      title: 'Laundry Request List',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
+      home: const Scaffold(
         body: Center(
 
           child: Card(
@@ -527,6 +537,7 @@ class RequestLaundry extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
 //     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
 //       title: 'RequestLaundry',
 //       theme: ThemeData(
 //         primarySwatch: Colors.blue,
@@ -561,7 +572,7 @@ class ComplaintCard extends StatelessWidget {
   final String dateTime;
   final String complaintStatus;
 
-  const ComplaintCard({
+  const ComplaintCard({super.key,
     required this.complaintNumber,
     required this.dateTime,
     required this.complaintStatus,
@@ -593,7 +604,7 @@ class ComplaintCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              title: Text(
+              title: const Text(
                 'Complaint Number:',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -602,7 +613,7 @@ class ComplaintCard extends StatelessWidget {
               subtitle: Text(complaintNumber),
             ),
             ListTile(
-              title: Text(
+              title: const Text(
                 'Date and Time:',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -611,7 +622,7 @@ class ComplaintCard extends StatelessWidget {
               subtitle: Text(dateTime),
             ),
             ListTile(
-              title: Text(
+              title: const Text(
                 'Complaint Status:',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -632,16 +643,19 @@ class ComplaintCard extends StatelessWidget {
 }
 
 class Complaint extends StatelessWidget {
+  const Complaint({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Complaint',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        body: Center(
+        body: const Center(
           child: Card(
             elevation: 5,
             shadowColor: Colors.black,
@@ -666,11 +680,11 @@ class Complaint extends StatelessWidget {
             // Open new window
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SubmitComplaint()),
+              MaterialPageRoute(builder: (context) => const SubmitComplaint()),
             );
           },
           backgroundColor: Colors.orange,
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
         ),
       ),
     );
@@ -678,14 +692,16 @@ class Complaint extends StatelessWidget {
 }
 
 class SubmitComplaint extends StatelessWidget {
+  const SubmitComplaint({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Complaint'),
+        title: const Text('Complaint'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -693,53 +709,52 @@ class SubmitComplaint extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Name',
                 hintText: 'Enter your name',
-                prefixIcon: Icon(Icons.person),
+                prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Email',
                 hintText: 'Enter your email',
-                prefixIcon: Icon(Icons.email),
+                prefixIcon: const Icon(Icons.email),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Complaint',
                 hintText: 'Enter your complaint',
-                prefixIcon: Icon(Icons.lock),
+                prefixIcon: const Icon(Icons.lock),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
               obscureText: true,
             ),
-            SizedBox(height: 24.0),
+            const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () {
                 // Perform button action
                 print('Button pressed');
               },
-              child: Text('Submit'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.orange,
-                onPrimary: Colors.white,
-                textStyle: TextStyle(fontSize: 18.0),
-                padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                foregroundColor: Colors.white, backgroundColor: Colors.orange,
+                textStyle: const TextStyle(fontSize: 18.0),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32.0),
                 ),
                 elevation: 2.0,
                 shadowColor: Colors.black,
               ),
+              child: const Text('Submit'),
             ),
           ],
         ),
@@ -749,6 +764,8 @@ class SubmitComplaint extends StatelessWidget {
 }
 
 class ChatPage extends StatelessWidget {
+  const ChatPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -767,7 +784,7 @@ class ChatPage extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             color: Colors.grey[200],
             child: Row(
               children: [
@@ -778,15 +795,15 @@ class ChatPage extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24.0),
                       ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                       filled: true,
                       fillColor: Colors.white,
                     ),
                   ),
                 ),
-                SizedBox(width: 8.0),
+                const SizedBox(width: 8.0),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () {
                     // Perform send message action
                   },
@@ -804,7 +821,7 @@ class ChatBubble extends StatelessWidget {
   final String message;
   final bool isMe;
 
-  const ChatBubble({
+  const ChatBubble({super.key,
     required this.message,
     required this.isMe,
   });
@@ -816,12 +833,12 @@ class ChatBubble extends StatelessWidget {
     final textColor = isMe ? Colors.black : Colors.black;
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Column(
         crossAxisAlignment: align,
         children: [
           Container(
-            padding: EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
               color: bubbleColor,
               borderRadius: BorderRadius.circular(16.0),
@@ -834,7 +851,7 @@ class ChatBubble extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 4.0),
+          const SizedBox(height: 4.0),
           Text(
             '12:34 PM', // Replace with actual timestamp
             style: TextStyle(
