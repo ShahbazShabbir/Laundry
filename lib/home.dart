@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one/damage.dart';
 import 'package:one/request_laundry.dart';
 import 'package:one/complaint.dart';
 import 'package:one/chat.dart';
@@ -36,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     HomePage(),
     const RequestLaundry(),
     const Complaint(),
+    const Damage(),
     const ChatPage(),
   ];
 
@@ -70,10 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.dangerous),
             label: 'Damage',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
+
         ],
       ),
     );

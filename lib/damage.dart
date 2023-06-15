@@ -3,11 +3,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:one/shared_preferences.dart';
 
-class ComplaintCard extends StatelessWidget {
+class DamageCard extends StatelessWidget {
   final String complaintNumber;
   final String complaintStatus;
 
-  const ComplaintCard({
+  const DamageCard({
     required this.complaintNumber,
     required this.complaintStatus,
   });
@@ -16,10 +16,10 @@ class ComplaintCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Color statusColor;
     switch (complaintStatus) {
-      case 'Accepted':
+      case 'Approved':
         statusColor = Colors.green;
         break;
-      case 'Declined':
+      case 'Rejected':
         statusColor = Colors.red;
         break;
       default:
@@ -36,7 +36,7 @@ class ComplaintCard extends StatelessWidget {
           children: [
             ListTile(
               title: const Text(
-                'Complaint Number:',
+                'Damage Number:',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -45,7 +45,7 @@ class ComplaintCard extends StatelessWidget {
             ),
             ListTile(
               title: const Text(
-                'Complaint Status:',
+                'Damage Status:',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -64,15 +64,15 @@ class ComplaintCard extends StatelessWidget {
   }
 }
 
-class Complaint extends StatefulWidget {
-  const Complaint({Key? key}) : super(key: key);
+class Damage extends StatefulWidget {
+  const Damage({Key? key}) : super(key: key);
 
   @override
-  _ComplaintState createState() => _ComplaintState();
+  _DamageState createState() => _DamageState();
 }
 
-class _ComplaintState extends State<Complaint> {
-  List<ComplaintCard> complaintCards = [];
+class _DamageState extends State<Damage> {
+  List<DamageCard> damageCards = [];
 
   @override
   void initState() {
@@ -81,7 +81,7 @@ class _ComplaintState extends State<Complaint> {
   }
 
   Future<void> fetchComplaintData() async {
-    final url = 'https://jetex.jirlie.com/api/resource/Complain?fields=["name","workflow_state"]';
+    final url = 'https://jetex.jirlie.com/api/resource/Damage?fields=["name","workflow_state"]';
 
     final credentials = await AppPreferences.getApiCredentials();
     final apiKey = credentials['apiKey'];
@@ -96,14 +96,14 @@ class _ComplaintState extends State<Complaint> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        List<ComplaintCard> cards = [];
+        List<DamageCard> cards = [];
 
         for (var complaint in data["data"]) {
           final complaintNumber = complaint['name'];
           final complaintStatus = complaint['workflow_state'];
 
           cards.add(
-            ComplaintCard(
+            DamageCard(
               complaintNumber: complaintNumber,
               complaintStatus: complaintStatus,
             ),
@@ -111,7 +111,7 @@ class _ComplaintState extends State<Complaint> {
         }
 
         setState(() {
-          complaintCards = cards;
+          damageCards = cards;
         });
       } else {
         print('Failed to fetch complaint cards. Error: ${response.statusCode}');
@@ -125,18 +125,18 @@ class _ComplaintState extends State<Complaint> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Complaint'),
+        title: const Text('Damage'),
       ),
       body: ListView.builder(
-        itemCount: complaintCards.length,
-        itemBuilder: (context, index) => complaintCards[index],
+        itemCount: damageCards.length,
+        itemBuilder: (context, index) => damageCards[index],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Open new window
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const SubmitComplaint()),
+            MaterialPageRoute(builder: (context) => const SubmitDamage()),
           );
         },
         backgroundColor: Colors.orange,
@@ -146,14 +146,14 @@ class _ComplaintState extends State<Complaint> {
   }
 }
 
-class SubmitComplaint extends StatelessWidget {
-  const SubmitComplaint({Key? key});
+class SubmitDamage extends StatelessWidget {
+  const SubmitDamage({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Complaint'),
+        title: const Text('Damage'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -184,7 +184,7 @@ class SubmitComplaint extends StatelessWidget {
             const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
-                labelText: 'Complaint',
+                labelText: 'Damage',
                 hintText: 'Enter your complaint',
                 prefixIcon: const Icon(Icons.lock),
                 border: OutlineInputBorder(
