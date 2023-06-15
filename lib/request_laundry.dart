@@ -203,6 +203,7 @@ class _RequestLaundryState extends State<RequestLaundry> {
             if (snapshot.hasData) {
               return ListView(
                 children: snapshot.data!,
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               );
             } else if (snapshot.hasError) {
               return Center(
