@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:one/shared_preferences.dart';
 
 class Request extends StatelessWidget {
-  const Request({super.key});
+  const Request({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +57,11 @@ class Request extends StatelessWidget {
                 print('Button pressed');
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.orange,
                 textStyle: const TextStyle(fontSize: 18.0),
-                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 32.0, vertical: 16.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32.0),
                 ),
@@ -74,23 +79,18 @@ class Request extends StatelessWidget {
 
 class OrderCard extends StatelessWidget {
   final String orderNumber;
-  final String dateTime;
-  final int numberOfItems;
   final String orderStatus;
 
-  const OrderCard({super.key,
+  const OrderCard({
     required this.orderNumber,
-    required this.dateTime,
-    required this.numberOfItems,
     required this.orderStatus,
   });
 
   @override
   Widget build(BuildContext context) {
-
     Color statusColor;
     switch (orderStatus) {
-      case 'In Progress':
+      case 'Washed':
         statusColor = Colors.orange;
         break;
       case 'Delivered':
@@ -109,55 +109,84 @@ class OrderCard extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(8, 0, 8, 20),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    ListTile(
-    title: const Text(
-    'Order Number:',
-    style: TextStyle(
-    fontWeight: FontWeight.bold,
-    ),
-    ),
-    subtitle: Text(orderNumber),
-    ),
-
-    ListTile(
-    title: const Text(
-    'Date and Time:',
-    style: TextStyle(
-    fontWeight: FontWeight.bold,
-    ),
-    ),
-    subtitle: Text(dateTime),
-    ),
-
-    ListTile(
-    title: const Text(
-    'Order Status:',
-    style: TextStyle(
-    fontWeight: FontWeight.bold,
-    ),
-    ),
-      subtitle: Text(
-        orderStatus,
-        style: TextStyle(
-          color: statusColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              title: const Text(
+                'Order Number:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(orderNumber),
+            ),
+            ListTile(
+              title: const Text(
+                'Order Status:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                orderStatus,
+                style: TextStyle(
+                  color: statusColor,
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-
-    ),
-    ],
-    ),
-
       ),
     );
   }
 }
 
-class RequestLaundry extends StatelessWidget {
-  const RequestLaundry({super.key});
+class RequestLaundry extends StatefulWidget {
+  const RequestLaundry({Key? key});
+
+  @override
+  _RequestLaundryState createState() => _RequestLaundryState();
+}
+
+class _RequestLaundryState extends State<RequestLaundry> {
+  Future<List<OrderCard>> fetchOrderCards() async {
+    final url = 'https://jetex.jirlie.com/api/resource/Laundry%20Request?fields=["name","workflow_state"]';
+
+    final credentials = await AppPreferences.getApiCredentials();
+    final apiKey = credentials['apiKey'];
+    final apiSecret = credentials['apiSecret'];
+
+    if (apiKey != null && apiSecret != null) {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Authorization': 'token $apiKey:$apiSecret'},
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+
+        List<OrderCard> orderCards = [];
+
+        for (var order in data["data"]) {
+          final orderNumber = order['name'];
+          final orderStatus = order['workflow_state'];
+
+          orderCards.add(
+            OrderCard(
+              orderNumber: orderNumber,
+              orderStatus: orderStatus,
+            ),
+          );
+        }
+        return orderCards;
+      } else {
+        throw Exception('Failed to fetch order cards');
+      }
+    } else {
+      throw Exception('API credentials not available');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,74 +196,37 @@ class RequestLaundry extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Scaffold(
-        body: Center(
-
-          child: Card(
-            elevation: 50,
-            shadowColor: Colors.black,
-            child: Column(
-              children: [
-                OrderCard(
-                  orderNumber: '1234',
-                  dateTime: 'June 8, 2023, 10:00 AM',
-                  numberOfItems: 5,
-                  orderStatus: 'In Progress',
-                ),
-                OrderCard(
-                  orderNumber: '6677',
-                  dateTime: 'June 8, 2023, 10:00 AM',
-                  numberOfItems: 5,
-                  orderStatus: 'Delivered',
-                ),
-              ],
-            ),
-          ),
-
+      home: Scaffold(
+        body: FutureBuilder<List<OrderCard>>(
+          future: fetchOrderCards(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView(
+                children: snapshot.data!,
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
-    ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Open new window
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Request()),
+            );
+          },
+          backgroundColor: Colors.orange,
+          child: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }
-
-// class RequestLaundry extends StatelessWidget {
-//   final List<Person> people = [
-//     Person('Uniform 1', 'assets/images/person1.jpg'),
-//     Person('Uniform 2', 'assets/images/person2.jpg'),
-//     Person('Uniform 3', 'assets/images/person3.jpg'),
-//     Person('Uniform 4', 'assets/images/person4.jpg'),
-//     Person('Uniform 5', 'assets/images/person5.jpg'),
-//   ];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: 'RequestLaundry',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: Scaffold(
-//         body: ListView.builder(
-//           itemCount: people.length,
-//           itemBuilder: (context, index) {
-//             return ListTile(
-//               leading: CircleAvatar(
-//                 backgroundImage: AssetImage(people[index].imagePath),
-//               ),
-//               title: Text(people[index].name),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-//
-// class Person {
-//   final String name;
-//   final String imagePath;
-//
-//   Person(this.name, this.imagePath);
-// }
