@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:one/request_laundry.dart';
 import 'package:one/complaint.dart';
 import 'package:one/chat.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:one/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({Key? key});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -30,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   final List<Widget> _widgetOptions = [
-    const HomePage(),
+    HomePage(),
     const RequestLaundry(),
     const Complaint(),
     const ChatPage(),
@@ -73,7 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-
     );
   }
 
@@ -84,8 +86,51 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String totalUniformValue = '';
+  String assignedUniformValue = '';
+  String inLaundryValue = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    final url = 'https://jetex.jirlie.com/api/resource/Uniform';
+
+    final credentials = await AppPreferences.getApiCredentials();
+    final apiKey = credentials['apiKey'];
+    final apiSecret = credentials['apiSecret'];
+
+    if (apiKey != null && apiSecret != null) {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Authorization': 'token $apiKey:$apiSecret'},
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+
+        totalUniformValue = data["data"].length.toString();
+        assignedUniformValue = "4 (Dummy)".toString();
+        inLaundryValue = "2 (Dummy)".toString();
+
+        setState(() {});
+      } else {
+        // Handle API error
+        // You can show an error message or perform any necessary actions
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,16 +144,16 @@ class HomePage extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
-              child: const ListTile(
-                title: Text(
+              child: ListTile(
+                title: const Text(
                   'Total Uniform',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 subtitle: Text(
-                  '16',
-                  style: TextStyle(
+                  totalUniformValue,
+                  style: const TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.cyan,
@@ -125,16 +170,16 @@ class HomePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: const ListTile(
-                      title: Text(
+                    child: ListTile(
+                      title: const Text(
                         'Assigned Uniform',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       subtitle: Text(
-                        '8',
-                        style: TextStyle(
+                        assignedUniformValue,
+                        style: const TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
@@ -150,16 +195,16 @@ class HomePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
-                    child: const ListTile(
-                      title: Text(
+                    child: ListTile(
+                      title: const Text(
                         'In Laundry',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       subtitle: Text(
-                        '3',
-                        style: TextStyle(
+                        inLaundryValue,
+                        style: const TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.pink,
@@ -173,20 +218,13 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Request()),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
       bottomNavigationBar: const Padding(
         padding: EdgeInsets.all(16.0),
-
+        // Your bottom navigation bar content goes here
       ),
     );
   }
 }
+
+// Other classes remain unchanged
