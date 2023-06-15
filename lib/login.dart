@@ -56,7 +56,7 @@ class LoginPage extends StatelessWidget {
   }
 
   Future<void> checkLoggedInUser(BuildContext context) async {
-    final url = 'http://<base-url>/api/method/frappe.auth.get_logged_user';
+    final url = 'https://jetex.jirlie.com/api/method/frappe.auth.get_logged_user';
     final credentials = await AppPreferences.getApiCredentials();
     final apiKey = credentials['apiKey'];
     final apiSecret = credentials['apiSecret'];
@@ -66,6 +66,8 @@ class LoginPage extends StatelessWidget {
         Uri.parse(url),
         headers: {'Authorization': 'token $apiKey:$apiSecret'},
       );
+
+      print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
         Navigator.push(
